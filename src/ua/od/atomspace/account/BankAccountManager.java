@@ -24,7 +24,7 @@ public class BankAccountManager {
 
     public BankAccount findBankAccountById(String id) {
         for (int i = 0; i < accounts.length; i++) {
-            if (accounts[i].getIdAccount().equals(id)) {
+            if (accounts[i].getAccountId().equals(id)) {
                 return accounts[i];
             }
         }
@@ -33,8 +33,8 @@ public class BankAccountManager {
     }
 
     public boolean deleteBankAccountById(String id) {
-        for (int i = 0; i < accounts.length; i++) {
-            if (accounts[i].getIdAccount().equals(id)) {
+    for (int i = 0; i < accounts.length; i++) {
+            if (accounts[i].getAccountId().equals(id)) {
                 BankAccount[] bufferAccounts_2 = new BankAccount[this.accounts.length - 1];
                 int j = 0;
                 for (; j < i; j++) {
@@ -53,27 +53,29 @@ public class BankAccountManager {
         return false;
     }
 
-    public boolean transferMoney(String id_1, String id_2, double amount) {
-        if (findBankAccountById(id_1) == null) {
+    public boolean transferMoney(String id1, String id2, double amount) {
+        BankAccount bankAccount1 = findBankAccountById(id1) ==null? null : findBankAccountById(id1);
+        BankAccount bankAccount2 = findBankAccountById(id2) ==null? null : findBankAccountById(id2);
+        if (bankAccount1 == null) {
             return false;
         }
-        if (findBankAccountById(id_2) == null) {
+        if (bankAccount2 == null) {
             return false;
         }
         if (amount <= 0) {
             System.out.println("Сумма перевода должна быть больше 0!");
             return false;
         }
-        if (findBankAccountById(id_1).getAccountBalance() < amount) {
-            System.out.println("На аккаунте с id: " + id_1 + " баланс меньше суммы перевода!");
+        if (bankAccount1.getAccountBalance() < amount) {
+            System.out.println("На аккаунте с id: " + id1 + " баланс меньше суммы перевода!");
             Date date = new Date();
-            findBankAccountById(id_1).addNewTransaction("Неудачная попытка перевода на аккаунт с id: " + id_2 + " на сумму: " + amount + ". Дата и время: " + date.toString());
+            bankAccount1.addNewTransaction("Неудачная попытка перевода на аккаунт с id: " + id2 + " на сумму: " + amount + ". Дата и время: " + date.toString());
             return false;
         }
-        findBankAccountById(id_1).setAccountBalance(findBankAccountById(id_1).getAccountBalance() - amount);
-        findBankAccountById(id_2).setAccountBalance(findBankAccountById(id_2).getAccountBalance() + amount);
-        findBankAccountById(id_1).addNewTransaction("Перевод на сумму: "+ amount+"$ -> "+id_2);
-        findBankAccountById(id_2).addNewTransaction("Перевод с акканта id: " + id_1 + " на сумму: " + amount + "$!");
+        bankAccount1.setAccountBalance(bankAccount1.getAccountBalance() - amount);
+        bankAccount2.setAccountBalance(bankAccount2.getAccountBalance() + amount);
+        bankAccount1.addNewTransaction("Перевод на сумму: " + amount + "$ -> " + id2);
+        bankAccount2.addNewTransaction("Перевод с акканта id: " + id1 + " на сумму: " + amount + "$!");
         System.out.println("Успешно переведено!");
         return true;
     }
@@ -85,20 +87,12 @@ public class BankAccountManager {
         if (amount <= 0) {
             System.out.println("Сумма пополнения должна быть больше 0!");
             Date date = new Date();
-            for (int i = 0; i < accounts.length; i++) {
-                if (accounts[i].getIdAccount().equals(id)) {
-                    accounts[i].addNewTransaction("Неудачная попытка пополнения счета " + accounts[i].getIdAccount() + ". Дата и время операции: " + date.toString());
-                }
-            }
+            findBankAccountById(id).addNewTransaction("Неудачная попытка пополнения счета " + findBankAccountById(id).getAccountId() + ". Дата и время операции: " + date.toString());
             return false;
         }
-        for (int i = 0; i < accounts.length; i++) {
-            if (accounts[i].getIdAccount().equals(id)) {
-                accounts[i].setAccountBalance(accounts[i].getAccountBalance() + amount);
-                Date date = new Date();
-                accounts[i].addNewTransaction("Пополнение счета " + accounts[i].getIdAccount() + " на сумму " + amount + "$. Дата и время операции: " + date.toString());
-            }
-        }
+        findBankAccountById(id).setAccountBalance(findBankAccountById(id).getAccountBalance() + amount);
+        Date date = new Date();
+        findBankAccountById(id).addNewTransaction("Пополнение счета " + findBankAccountById(id).getAccountId() + " на сумму " + amount + "$. Дата и время операции: " + date.toString());
         System.out.println("Успешно пополнено!");
         return true;
     }

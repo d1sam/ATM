@@ -12,9 +12,8 @@ public class BankAccount {
     private final Person owner;
 
     protected BankAccount(double accountBalance, Person owner) {
-        id = getUniqueId();
-        transactionsHistory = new String[5];
-        Arrays.fill(transactionsHistory, "");
+        this.id = getUniqueId();
+        this.transactionsHistory = new String[5];
         this.owner = owner;
         this.accountBalance = accountBalance;
     }
@@ -40,11 +39,11 @@ public class BankAccount {
         return idBuff.substring(0, 20);
     }
 
-    public String getIdAccount() {
+    public String getAccountId() {
         return id;
     }
 
-    public void checkTransactionsHistory() {
+    public void printTransactionsHistory() {
         for (String item :
                 transactionsHistory) {
             System.out.println(item);

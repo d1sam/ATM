@@ -1,9 +1,8 @@
 package ua.od.atomspace;
 
-import ua.od.atomspace.account.BankAccount;
 import ua.od.atomspace.account.BankAccountManager;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -12,7 +11,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         int action;
         BankAccountManager manager = new BankAccountManager();
-        m1:
         while (true) {
             System.out.println("Какое действие Вы хотите сделать?\n" +
                     "1 - Добавить новый аккаунт. 2 - Просмотреть информацию обо всех аккаунтах. 3 - Посмотреть информацию об определенном аккаунте по id.\n" +
@@ -29,27 +27,27 @@ public class Main {
                     System.out.println("Введите начальную сумму на аккаунте: ");
                     double sum = scanner.nextDouble();
                     manager.addNewAccount(owner, sum);
-                    continue m1;
+                    continue;
                 case 2:
                     manager.printAccountsInfo();
-                    continue m1;
+                    continue;
                 case 3:
                     System.out.println("Какой id Вас интересует?");
                     String idInfo = scanner.next();
                     manager.findBankAccountById(idInfo).bankAccountInfo();
-                    continue m1;
+                    continue;
                 case 4:
                     System.out.println("Какой id Вас интересует?");
                     String idDelete = scanner.next();
                     manager.deleteBankAccountById(idDelete);
-                    continue m1;
+                    continue;
                 case 5:
                     System.out.println("Какой id Вас интересует?");
                     String idRefill = scanner.next();
                     System.out.println("На какую сумму Вы хотите пополнить счет аккаунта?");
                     Double sumRefill = scanner.nextDouble();
                     manager.refillBankAccount(sumRefill, idRefill);
-                    continue m1;
+                    continue;
                 case 6:
                     System.out.println("Введите id аккаунта, со счета которого хотите совершить перевод: ");
                     String id_1 = scanner.next();
@@ -58,18 +56,18 @@ public class Main {
                     System.out.println("Введите сумму перевода: ");
                     Double amount = scanner.nextDouble();
                     manager.transferMoney(id_1, id_2, amount);
-                    continue m1;
+                    continue;
                 case 7:
                     System.out.println("Какой id Вас интересует?");
                     String idTransferHistory = scanner.next();
-                    manager.findBankAccountById(idTransferHistory).checkTransactionsHistory();
-                    continue m1;
+                    manager.findBankAccountById(idTransferHistory).printTransactionsHistory();
+                    continue;
                 case 8:
                     System.out.println("Завершено!");
-                    break m1;
+                    break;
                 default:
                     System.out.println("К сожалению, такой опции не сущуествует!");
-                    continue m1;
+                    continue;
             }
         }
     }
