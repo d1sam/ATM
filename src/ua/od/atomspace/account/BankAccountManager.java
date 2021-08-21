@@ -2,24 +2,47 @@ package ua.od.atomspace.account;
 
 import ua.od.atomspace.Person;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class BankAccountManager {
     private BankAccount[] accounts;
+    private int iterator = 0;
 
     public BankAccountManager() {
-        this.accounts = new BankAccount[0];
+        this.accounts = new BankAccount[15];
     }
 
     public BankAccount addNewAccount(Person owner, double balance) {
         BankAccount newBankAccount = new BankAccount(balance, owner);
-        BankAccount[] bufferAccounts = new BankAccount[this.accounts.length + 1];
-        for (int i = 0; i < this.accounts.length; i++) {
-            bufferAccounts[i] = accounts[i];
+        if (iterator != Arrays.asList(accounts).size()) {
+            accounts[iterator] = newBankAccount;
+            iterator++;
+        } else {
+            BankAccount[] bufferAccounts = new BankAccount[Arrays.asList(accounts).size() * 2];
+            for (int i = 0; i < this.accounts.length; i++) {
+                bufferAccounts[i] = accounts[i];
+            }
+            accounts = bufferAccounts;
+            accounts[iterator] = newBankAccount;
+            iterator++;
         }
-        bufferAccounts[this.accounts.length] = newBankAccount;
-        accounts = bufferAccounts;
         return newBankAccount;
+    }
+
+    public boolean deleteBankAccountById(String id) {
+        for (int i = 0; i < accounts.length; i++) {
+            if (accounts[i].getAccountId().equals(id)) {
+                for (; i < accounts.length - 1; i++) {
+                    accounts[i] = accounts[i + 1];
+                }
+                iterator--;
+                System.out.println("Аккаунт с id: " + id + " был успешно удален!");
+                return true;
+            }
+        }
+        System.out.println("Аккаунт с id: " + id + " не удалось найти!");
+        return false;
     }
 
     public BankAccount findBankAccountById(String id) {
@@ -32,30 +55,9 @@ public class BankAccountManager {
         return null;
     }
 
-    public boolean deleteBankAccountById(String id) {
-    for (int i = 0; i < accounts.length; i++) {
-            if (accounts[i].getAccountId().equals(id)) {
-                BankAccount[] bufferAccounts_2 = new BankAccount[this.accounts.length - 1];
-                int j = 0;
-                for (; j < i; j++) {
-                    bufferAccounts_2[j] = accounts[j];
-                }
-                i++;
-                for (; j < bufferAccounts_2.length; j++) {
-                    bufferAccounts_2[j] = accounts[i];
-                }
-                accounts = bufferAccounts_2;
-                System.out.println("Аккаунт с id: " + id + " был успешно удален!");
-                return true;
-            }
-        }
-        System.out.println("Аккаунт с id: " + id + " не удалось найти!");
-        return false;
-    }
-
     public boolean transferMoney(String id1, String id2, double amount) {
-        BankAccount bankAccount1 = findBankAccountById(id1) ==null? null : findBankAccountById(id1);
-        BankAccount bankAccount2 = findBankAccountById(id2) ==null? null : findBankAccountById(id2);
+        BankAccount bankAccount1 = findBankAccountById(id1) == null ? null : findBankAccountById(id1);
+        BankAccount bankAccount2 = findBankAccountById(id2) == null ? null : findBankAccountById(id2);
         if (bankAccount1 == null) {
             return false;
         }
